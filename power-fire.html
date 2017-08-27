@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>烟花效果</title>
+  <style type="text/css">
+	*{
+		margin:0px;
+		padding:0px;
+	}
+	body{
+		background:#ede;
+		overflow:hidden;
+	}
+	.firework{
+		position:absolute;
+		width:10px;
+		height:50px;
+		border-radius:50%;
+		background:red;
+	}
+	.fires{
+		position:absolute;
+		width:6px;
+		height:6px;
+		border-radius:50%;
+		background:red;
+	}
+  </style>
+  <script type="text/javascript">
+	/*
+	 1.在鼠标下端生成子弹
+	 2.子弹位置移到鼠标位置
+	 3.子弹解开成小烟花
+	 4.小烟花散开
+	*/
+	// 1.在鼠标下端生成子弹
+	 document.onclick=function(arg){
+		var num=  document.getElementsByClassName("firework").length;
+		console.log(num);
+		if(num<6){
+			//获取鼠标位置
+			arg = arg||window.event;//解决兼容性
+			var X =arg.clientX;
+			var Y = arg.clientY;
+			var H = window.innerHeight;
+			firework(X,Y,H);  //获取子弹方法
+		}
+		
+	}
+	function firework(x,y,h){
+		var oDiv = document.createElement("div");
+		oDiv.className = "firework";
+		oDiv.style.backgroundColor = color1();
+		//oDiv.style.backgroundColor = color2();
+		document.body.appendChild(oDiv);
+		//console.log(x,y,h)
+		//对子弹定位在鼠标下方
+		oDiv.style.left = x+"px";
+		oDiv.style.top = h+"px";
+		//让子弹往上移动
+		// 2.子弹位置移到鼠标位置
+		var speed = 10;
+		var timer = setInterval(function(){
+			oDiv.style.top = oDiv.offsetTop - speed+"px";
+			if(oDiv.offsetTop <=y){
+				clearInterval(timer);
+				document.body.removeChild(oDiv);
+				creatfires(x,y,h);
+			}
+		},1000/60);
+	}
+	// 3.子弹解开成小烟花
+	function creatfires(x,y,h){
+		//console.log(y);
+		var randomNum = Math.ceil(Math.random()*50)+50; //50-100
+		var fires =[];
+		//console.log(randomNum);
+		for( var i=0;i<randomNum;i++){
+			fires[i] = document.createElement("div");
+			fires[i].className = "fires";
+			fires[i].style.top = y +"px";
+			fires[i].style.left =x+"px";
+			//fires[i].style.backgroundColor = color1();
+			
+			document.body.appendChild(fires[i]);
+			//给每个烟花粒子一个随机的速度值
+			fires[i].speedX = Math.random()*30-10; //-10~10
+			fires[i].speedY = Math.random()*30-10; 
+			fires[i].style.backgroundColor = color2();
+		}
+		var timer2 = setInterval(function(){
+			for(var i = 0;i<randomNum;i++){
+				fires[i].style.top = fires[i].offsetTop+fires[i].speedY+"px";
+				fires[i].style.left = fires[i].offsetLeft+fires[i].speedX+"px";
+				fires[i].speedY += 1;
+				//console.log(fires[i].speedY);
+				//对烟花粒子范围控制
+				if(fires[i].offsetLeft<0 || fires[i].offsetLeft>window.innerWidth || fires[i].offsetTop>h){
+					document.body.removeChild(fires[i]);
+				}
+			}
+
+		},1000/60);
+	
+	}
+	//随机颜色 
+	//方法一: rgb
+	function color1(){ 
+		var r = Math.floor(Math.random()*256); //0-255
+		var g = Math.floor(Math.random()*256);
+		var b = Math.floor(Math.random()*256);
+		return "rgb("+r+","+g+","+b+")";
+	}
+	//方法二: 十六进制
+	function color2(){
+		return "#"+function(color){ //匿名函数
+			return new Array(7-color.length).join("0")+color;
+		}((Math.random()*0x1000000 <<0).toString(16));
+	}
+	//33.54566
+	//new Array(7-color.length) 创建一个 长度为7-color.length的空数组
+	//0×1000000  ffffff的十进制
+	//0×1000000 <<0 取整
+	/*
+		color.length = 6
+		new Array(1).join("0") 只有数组个数大于等于2时才可以用0拼接
+		color.length = 4
+		new Array(3).join("0")  " "0" "0" "
+	*/
+  </script>
+ </head>
+ <body>
+  
+ </body>
+</html>
