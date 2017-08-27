@@ -1,11 +1,10 @@
+项目主页 <a href="https://javastar920905.github.io/html5/">项目主页 </a>
 # 查看在线demo
 ## gf 仿照网上例子做的demo
-### demo 原型
-https://javastar920905.github.io/html5/translate/index
--- 仿照结果
-https://javastar920905.github.io/html5/translate/index2
+### <a href="https://javastar920905.github.io/html5/translate/index">demo 原型</a>
 
-### 点击鼠标页面出现烟花效果-视频教程
-http://www.365yg.com/group/6440320757309374977/
---点击鼠标页面出现烟花效果
-https://javastar920905.github.io/html5/power-fire.html
+-- <a href="https://javastar920905.github.io/html5/translate/index2">仿照结果</a>
+
+
+### 点击鼠标页面出现烟花效果-<a href="http://www.365yg.com/group/6440320757309374977/">视频教程</a>
+<a herf="https://javastar920905.github.io/html5/power-fire.html">点击鼠标页面出现烟花效果</a>
