@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+ <style type="text/css">
+	*{margin:0px;padding:0px;overflow:hidden;}
+ </style>
+<html><head></head><body><canvas id="viewStyle"></canvas></body></html>
+ 
+<script>
+//canvas的一些基本操作，获得上下文环境：
+var viewStyle=document.getElementById("viewStyle");
+var context=viewStyle.getContext('2d');
+//实现视口的全屏效果，获得视口，并设置成画布大小
+var winObject = window;//window.screen;
+var width = viewStyle.width = window.innerWidth;
+
+var height = viewStyle.height = window.innerHeight;
+//保存draw()函数中,每行x对应的纵坐标
+var letters = Array(256).join(1).split('');
+//绘制函数
+var draw = function () {
+ 
+	 /*
+		 fillStyle 属性设置或返回用于填充绘画的颜色、渐变或模式。
+		 rgba(R,G,B,A)其中'.05'代表阿尔法透明度
+	 */
+    context.fillStyle = 'rgba(0,0,0,.05)';
+	/*
+		 fillRect() 方法使用 fillStyle 属性所指定的颜色、渐变和模式来填充指定的矩形
+    */
+    context.fillRect(0, 0, width, height);
+ 
+    context.fillStyle = '#0F0';
+ 
+	/*
+		 其原理就是不停的产生新的有透明度的背景和要显示的内容，
+		 这样新的背景不停的覆盖旧的显示内容
+		 新的内容就突显了出来
+
+		 map() 把每个元素通过函数传递到当前匹配集合中
+	 */
+    letters.map(function (y_pos, index) {
+		//随机生成字母符号 x,y,z....
+        text = String.fromCharCode(/*3e4*/ 65 + Math.random() * 33);
+		
+        x_pos = index * 10;
+		
+		//在坐标点(x,y)处填写text文本  console.log(x_pos,y_pos,text);
+        context.fillText(text, x_pos, y_pos);
+ 
+        letters[index] = (y_pos > height + Math.random() * 1e4) ? 0 : (y_pos + 10);
+ 
+    });
+ 
+};
+//把绘制函数循环调用
+setInterval(draw, 1000/60);
+</script>
