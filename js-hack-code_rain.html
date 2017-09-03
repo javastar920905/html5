@@ -8,11 +8,11 @@
 //canvas的一些基本操作，获得上下文环境：
 var viewStyle=document.getElementById("viewStyle");
 var context=viewStyle.getContext('2d');
-//实现视口的全屏效果，获得视口，并设置成画布大小
-var winObject = window;//window.screen;
-var width = viewStyle.width = window.innerWidth;
+//实现视口的全屏效果，获得视口，并设置成画布大小,f11全屏效果更佳
+var winObject = window.screen;
+var width = viewStyle.width = winObject.width;
 
-var height = viewStyle.height = window.innerHeight;
+var height = viewStyle.height = winObject.height;
 //保存draw()函数中,每行x对应的纵坐标
 var letters = Array(256).join(1).split('');
 //绘制函数
