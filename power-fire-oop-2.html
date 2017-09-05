@@ -91,11 +91,12 @@
 				var fires =[];
 				for( var i=0;i<randomNum;i++){
 					//给每个烟花粒子一个随机的速度值
-					var fire=new Fire(Math.random()*30-10,Math.random()*30-10,color2());
+					var fire=new Fire(Math.random()*30-10,Math.random()*30-10,color2(),this.point);
 					fires[i]=fire.createFire();
 					document.body.appendChild(fires[i]);
 				}
 				var timer2 = setInterval(function(){
+					//这里的this变成了window
 					if(fires.length<1){
 						clearInterval(timer2);
 					}
@@ -126,12 +127,12 @@
 
 	//定义散开的烟火对象
 	Fire.prototype.className="fires";
-	Fire.prototype.point={};
 	//(横轴移速,纵轴移速,背景色,初始坐标点)
-	function Fire(speedX,speedY,bgColor){
+	function Fire(speedX,speedY,bgColor,point){
 		this.speedX=speedX;
 		this.speedY=speedY;
 		this.bgColor=bgColor;
+		this.point=point;
 	}
 	Fire.prototype.createFire=function(){
 		var div = document.createElement("div");
