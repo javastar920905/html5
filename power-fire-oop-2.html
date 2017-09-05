@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <style type="text/css">
+	*{
+		margin:0px;
+		padding:0px;
+	}
+	body{
+		background:#ede;
+		overflow:hidden;
+	}
+	.firework{
+		position:absolute;
+		width:10px;
+		height:50px;
+		border-radius:50%;
+		background:red;
+	}
+	.fires{
+		position:absolute;
+		width:6px;
+		height:6px;
+		border-radius:50%;
+		background:red;
+	}
+  </style>
+ </head>
+ <body onload="init()">
+  <script type="text/javascript">
+  <!--
+	 //页面加载时定时绽放烟花
+	 function init(){
+	    var width=window.innerWidth;
+		setInterval(function(){
+			var nums=Math.ceil(Math.random()*1);
+			//console.log(nums);
+			for(var i=0;i<nums;i++){
+				var point=new Point(Math.random()*width-100,Math.random()*300);
+				firework(point);
+			}
+
+		},5000);
+		setInterval(function(){
+				var point=new Point(width-2,Math.random()*150);
+				firework(point);
+
+		},1000);
+	 }
+	//鼠标点击位置
+	function Point(x,y){
+		this.x=x;
+		this.y=y;
+	}
+
+	//定义子弹对象
+	Stone.prototype.startPos=window.innerHeight;
+	Stone.prototype.className="firework";
+	//Stone.prototype.speed=10;
+	function Stone(bgColor,point){
+		this.bgColor=bgColor;
+		this.point=point;
+		this.dom=null;//每个子弹拥有自己的dom
+		this.speed=Math.random()*5+10;//每个子弹速度在10-15之间
+
+		this.moveStone=function(stone){
+			this.dom=this.createStone();
+			document.body.appendChild(stone.dom);
+			//console.log(this.dom);
+			//让子弹往上移动
+			// 2.子弹位置移到鼠标位置
+			var timer = setInterval(function(){
+				//console.log(this);//这里的this为window对象,所以要调用时传递stone对象
+				stone.dom.style.top = stone.dom.offsetTop - stone.speed+"px";
+				if(stone.dom.offsetTop <=stone.point.y){
+					clearInterval(timer);
+					document.body.removeChild(stone.dom);
+					stone.createFires(stone);
+				}
+			},1000/60);
+		}
+
+		this.createFires=function(stone){
+				var randomNum = Math.ceil(Math.random()*50+20); //每次爆炸生成烟火数50-70
+				var fires =[];
+				for( var i=0;i<randomNum;i++){
+					//给每个烟花粒子一个随机的速度值
+					var fire=new Fire(Math.random()*30-10,Math.random()*30-10,color2());
+					fires[i]=fire.createFire();
+					document.body.appendChild(fires[i]);
+				}
+				var timer2 = setInterval(function(){
+					if(fires.length<1){
+						clearInterval(timer2);
+					}
+					for(var i = 0;i<fires.length;i++){
+						fires[i].style.top = fires[i].offsetTop+fires[i].speedY+"px";
+						fires[i].style.left = fires[i].offsetLeft+fires[i].speedX+"px";
+						fires[i].speedY += Math.random();
+						//console.log(fires[i].speedY);
+						//对烟花粒子范围控制
+						if(fires[i].offsetLeft<0 || fires[i].offsetLeft>window.innerWidth || fires[i].offsetTop>window.innerHeight){
+							document.body.removeChild(fires[i]);
+							fires.splice(i,1);;
+						}
+					}
+
+				},1000/60);
+		}
+	}
+	
+	Stone.prototype.createStone=function(){
+		var dom=document.createElement("div");
+		dom.style.left=this.point.x+"px";
+		dom.style.top = this.startPos+"px"
+		dom.style.backgroundColor=this.bgColor;
+		dom.className=this.className;
+		return dom;
+	}
+
+	//定义散开的烟火对象
+	Fire.prototype.className="fires";
+	Fire.prototype.point={};
+	//(横轴移速,纵轴移速,背景色,初始坐标点)
+	function Fire(speedX,speedY,bgColor){
+		this.speedX=speedX;
+		this.speedY=speedY;
+		this.bgColor=bgColor;
+	}
+	Fire.prototype.createFire=function(){
+		var div = document.createElement("div");
+		div.className = this.className;
+		div.style.top = this.point.y +"px";
+		div.style.left =this.point.x+"px";
+		div.speedX = this.speedX;
+		div.speedY = this.speedY; 
+		div.style.backgroundColor = this.bgColor;
+		return div;
+	}
+
+	 /*
+	 1.在鼠标下端生成子弹
+	 2.子弹位置移到鼠标位置
+	 3.子弹解开成小烟花
+	 4.小烟花散开
+	*/
+	// 1.在鼠标下端生成子弹
+	 document.onclick=function(arg){
+		var num=  document.getElementsByClassName("firework").length;
+		//console.log(num);
+		if(num<3){
+			//获取鼠标位置
+			arg = arg||window.event;//解决兼容性
+			var point=new Point(arg.clientX,arg.clientY);
+			firework(point);
+		}
+		
+	}
+	//绽放烟花
+	function firework(point){
+		var stone= new Stone(color1(),point);  //获取子弹方法
+		Fire.prototype.point=point;//所有烟火的初始坐标点一致
+		stone.moveStone(stone);//生成子弹,并且移动爆裂成烟火
+	}
+
+	//随机颜色 
+	//方法一: rgb
+	function color1(){ 
+		var r = Math.floor(Math.random()*256); //0-255
+		var g = Math.floor(Math.random()*256);
+		var b = Math.floor(Math.random()*256);
+		return "rgb("+r+","+g+","+b+")";
+	}
+	//方法二: 十六进制
+	function color2(){
+		return "#"+function(color){ //匿名函数
+			return new Array(7-color.length).join("0")+color;
+		}((Math.random()*0x1000000 <<0).toString(16));
+	}
+
+	
+  //-->
+  </script>
+ </body >
+</html>
